@@ -10,6 +10,17 @@ class CPU:
     def __init__(self):
         self.memory = Memory(width=16, depth=256)
         self.ext_port = LCD()
+
+        def send_cmd(cmd):
+            return [
+                # Command: function set
+                MOVL(R1, cmd),
+                STX (R1, R0, 0),
+                # Wait for busy flag to reset
+                LDX (R1, R0, 0),
+                CMP (R1, 0),
+                JNZ (-3),
+            ]
         
         self.memory.init = [
             *([0] * 8),
@@ -21,36 +32,16 @@ class CPU:
                 MOVL(R0, 0),
 
                 # Command: function set
-                MOVL(R1, 0b00111000),
-                STX (R1, R0, 0),
-                # Wait for busy flag to reset
-                LDX (R1, R0, 0),
-                CMP (R1, 0),
-                JNZ (-3),
+                *send_cmd(0b00111000),
 
                 # Command: display on
-                MOVL(R1, 0b00001110),
-                STX (R1, R0, 0),
-                # Wait for busy flag to reset
-                LDX (R1, R0, 0),
-                CMP (R1, 0),
-                JNZ (-3),
+                *send_cmd(0b00001110),
 
                 # Command: entry mode set
-                MOVL(R1, 0b00000110),
-                STX (R1, R0, 0),
-                # Wait for busy flag to reset
-                LDX (R1, R0, 0),
-                CMP (R1, 0),
-                JNZ (-3),
+                *send_cmd(0b00000110),
 
                 # Command: clear display
-                MOVL(R1, 0b00000001),
-                STX (R1, R0, 0),
-                # Wait for busy flag to reset
-                LDX (R1, R0, 0),
-                CMP (R1, 0),
-                JNZ (-3),
+                *send_cmd(0b00000001),
 
                 # Print string
                 # Address of string

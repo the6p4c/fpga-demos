@@ -1,0 +1,14 @@
+# Compiled files
+hardware.bin
+hardware.asc
+hardware.blif
+
+# nMigen generated files
+__pycache__/
+cpu.v
+lcd.v
+
+# Other stuff
+abc.history
+*.vcd
+*.gtkw

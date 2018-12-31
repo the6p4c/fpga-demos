@@ -1,0 +1,10 @@
+# Compiled files
+hardware.bin
+hardware.asc
+hardware.blif
+
+# nMigen generated files
+lcd.v
+
+# Other stuff
+abc.history
